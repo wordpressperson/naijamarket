@@ -3,7 +3,7 @@
 import { MarketGrid } from "@/components/market/MarketGrid";
 import { useMarkets } from "@/hooks/useMarkets";
 import { Loader2 } from "lucide-react";
-import { capitalize } from "@/lib/utils"; // Assuming capitalize exists, if not we can use a basic string method
+//import { capitalize } from "@/lib/utils"; // Assuming capitalize exists, if not we can use a basic string method
 
 // Capitalize first letter helper
 const capitalizeFirstLetter = (string: string) => {
