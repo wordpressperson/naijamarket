@@ -12,6 +12,12 @@ interface MarketChartProps {
   data: ChartDataPoint[];
 }
 
+// Extract the formatter to safely bypass Recharts' strict internal typing
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const tooltipFormatter = (value: any) => {
+  return [`₦${value ?? 0}`, "Yes"];
+};
+
 export function MarketChart({ data }: MarketChartProps) {
   // Find min/max for the Y axis to make the chart look dynamic
   const minPrice = useMemo(() => Math.min(...data.map(d => d.price)) - 5, [data]);
@@ -42,7 +48,7 @@ export function MarketChart({ data }: MarketChartProps) {
             contentStyle={{ backgroundColor: '#1a1b23', borderColor: '#2d2f39', borderRadius: '8px' }}
             itemStyle={{ color: '#10b981' }}
             labelStyle={{ color: '#9ca3af' }}
-            formatter={(value: number | string | undefined) => [`₦${value ?? 0}`, "Yes"]}
+            formatter={tooltipFormatter}
           />
           <Area
             type="monotone"
