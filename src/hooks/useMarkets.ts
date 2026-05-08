@@ -40,6 +40,7 @@ export function useMarkets() {
   if (marketsInfo && marketAddresses) {
     marketsInfo.forEach((result, index) => {
       if (result.status === "success" && result.result) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const info = result.result as any; 
         
         const totalYes = info.totalYesPool || 0n;
