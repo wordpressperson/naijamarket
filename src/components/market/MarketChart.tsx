@@ -42,7 +42,7 @@ export function MarketChart({ data }: MarketChartProps) {
             contentStyle={{ backgroundColor: '#1a1b23', borderColor: '#2d2f39', borderRadius: '8px' }}
             itemStyle={{ color: '#10b981' }}
             labelStyle={{ color: '#9ca3af' }}
-            formatter={(value: number) => [`₦${value}`, "Yes"]}
+            formatter={(value: number | string | undefined) => [`₦${value ?? 0}`, "Yes"]}
           />
           <Area
             type="monotone"
