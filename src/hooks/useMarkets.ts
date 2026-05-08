@@ -28,7 +28,9 @@ export function useMarkets() {
     isLoading: isLoadingInfo,
     isError: isErrorInfo
   } = useReadContracts({
-    contracts,
+    // Tell TypeScript to bypass Wagmi's ultra-strict ABI type-checking here
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    contracts: contracts as any,
   });
 
   const isLoading = isLoadingAddresses || isLoadingInfo;
