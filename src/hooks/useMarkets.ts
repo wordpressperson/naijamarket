@@ -45,15 +45,17 @@ export function useMarkets() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const info = result.result as any; 
         
-        const totalYes = info.totalYesPool || 0n;
-        const totalNo = info.totalNoPool || 0n;
+        // Changed from 0n to BigInt(0) to fix the ES2020 target error
+        const totalYes = info.totalYesPool || BigInt(0);
+        const totalNo = info.totalNoPool || BigInt(0);
         const totalPool = totalYes + totalNo;
         
         let yesOdds = 1000;
         let noOdds = 1000;
         
-        if (totalPool > 0n) {
-            yesOdds = Math.round(Number((totalYes * 2000n) / totalPool));
+        if (totalPool > BigInt(0)) {
+            // Changed from 2000n to BigInt(2000)
+            yesOdds = Math.round(Number((totalYes * BigInt(2000)) / totalPool));
             noOdds = 2000 - yesOdds;
         }
         
