@@ -40,6 +40,9 @@ export function useMarkets() {
   const markets: MarketData[] = [];
 
   if (marketsInfo && marketAddresses) {
+    // FIX: Safely cast marketAddresses to an array of strings so TypeScript allows indexing
+    const addresses = marketAddresses as string[];
+
     marketsInfo.forEach((result, index) => {
       if (result.status === "success" && result.result) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -64,7 +67,7 @@ export function useMarkets() {
         const volumeFormatted = volumeNum.toLocaleString(undefined, { maximumFractionDigits: 0 });
 
         markets.push({
-          id: marketAddresses[index] as string, 
+          id: addresses[index], // Using the safely typed array here
           question: info.question,
           imageUrl: info.imageUrl || "", 
           category: info.category,
