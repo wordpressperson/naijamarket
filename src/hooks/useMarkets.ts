@@ -2,6 +2,7 @@ import { useReadContract, useReadContracts } from "wagmi";
 import { FACTORY_ADDRESS, FACTORY_ABI, PREDICTION_MARKET_ABI } from "@/lib/constants";
 import { formatUnits } from "viem";
 import { MarketData } from "@/components/market/MarketCard";
+import { polygon } from "wagmi/chains";
 
 export function useMarkets() {
   // 1. Fetch all market addresses from the factory
@@ -13,6 +14,7 @@ export function useMarkets() {
     address: FACTORY_ADDRESS,
     abi: FACTORY_ABI,
     functionName: "getMarkets",
+    chainId: polygon.id,
   });
 
   // 2. Prepare multicall configuration for all markets
@@ -20,6 +22,7 @@ export function useMarkets() {
     address,
     abi: PREDICTION_MARKET_ABI,
     functionName: "getMarketInfo",
+    chainId: polygon.id,
   }));
 
   // 3. Fetch detailed info for all markets simultaneously
