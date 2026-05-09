@@ -18,7 +18,7 @@ export function TrendingBanner() {
             🚀 Trending Now
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-            Will Nigeria win AFCON 2025?
+            Will Nigeria win AFCON 2027?
           </h1>
           <p className="text-lg text-muted-foreground">
             Over ₦2.5B traded on this market. Place your predictions before the group stage ends.

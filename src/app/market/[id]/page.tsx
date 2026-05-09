@@ -28,7 +28,7 @@ export default function MarketDetailPage({ params }: { params: { id: string } })
   // Mock data for the specific market
   const market = {
     id: params.id,
-    question: "Will Nigeria win AFCON 2025?",
+    question: "Will Nigeria win AFCON 2027?",
     volume: "2,504,500",
     yesOdds: 1360,
     noOdds: 640,
@@ -87,7 +87,7 @@ export default function MarketDetailPage({ params }: { params: { id: string } })
             <h3 className="text-lg font-semibold mb-4">Market Rules</h3>
             <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
               <p>
-                This market will resolve to &quot;Yes&quot; if the Nigerian Men&apos;s National Football Team (Super Eagles) wins the 2025 Africa Cup of Nations (AFCON) final match.
+                This market will resolve to &quot;Yes&quot; if the Nigerian Men&apos;s National Football Team (Super Eagles) wins the 2027 Africa Cup of Nations (AFCON) final match.
               </p>
               <p>
                 If any other team wins, or if the tournament is permanently cancelled, this market will resolve to &quot;No&quot;.
