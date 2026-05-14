@@ -69,6 +69,13 @@ export function useMarkets() {
         const volumeNum = Number(formatUnits(totalPool, 18));
         const volumeFormatted = volumeNum.toLocaleString(undefined, { maximumFractionDigits: 0 });
 
+        const endTime = Number(info.endTime); // endTime is in seconds
+        const isExpired = endTime * 1000 < Date.now();
+
+        // If you want to completely remove expired markets instead of showing them with a badge, 
+        // you can uncomment the following line:
+        // if (isExpired) return;
+
         markets.push({
           id: addresses[index], // Using the safely typed array here
           question: info.question,
@@ -77,6 +84,7 @@ export function useMarkets() {
           volume: volumeFormatted,
           yesOdds,
           noOdds,
+          isExpired,
         });
       }
     });

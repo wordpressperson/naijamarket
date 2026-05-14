@@ -12,6 +12,7 @@ export interface MarketData {
   noOdds: number;
   imageUrl: string;
   category: string;
+  isExpired?: boolean;
 }
 
 const IMAGE_OVERRIDES: Record<string, string> = {
@@ -31,7 +32,9 @@ export function MarketCard({ market }: { market: MarketData }) {
       onClick={() => router.push(`/market/${market.id}`)}
       whileHover={{ scale: 1.02 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className="group relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-xl border border-border bg-card p-4 shadow-sm transition-shadow hover:shadow-md hover:border-primary/50"
+      className={`group relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-xl border border-border bg-card p-4 shadow-sm transition-shadow hover:shadow-md hover:border-primary/50 ${
+        market.isExpired ? "opacity-60 grayscale-[0.5]" : ""
+      }`}
     >
       <div className="flex items-start justify-between space-x-4">
         <div className="flex-1 space-y-1">
@@ -39,6 +42,11 @@ export function MarketCard({ market }: { market: MarketData }) {
             <span className="uppercase tracking-wider text-primary truncate" title={market.category}>
               {market.category}
             </span>
+            {market.isExpired && (
+              <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-[10px] uppercase text-destructive border border-destructive/20">
+                Expired
+              </span>
+            )}
           </div>
           <h3 className="font-semibold leading-tight text-card-foreground line-clamp-4 md:text-lg" title={market.question}>
             {market.question}
