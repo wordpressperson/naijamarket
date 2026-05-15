@@ -2,9 +2,9 @@
 pragma solidity ^0.8.24;
 
 import "./PredictionMarket.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract MarketFactory {
-    address public owner;
+contract MarketFactory is Ownable {
     address[] public markets;
 
     // Fees in basis points (100 = 1%)
@@ -19,13 +19,7 @@ contract MarketFactory {
         uint256 endTime
     );
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Only owner");
-        _;
-    }
-
-    constructor() {
-        owner = msg.sender;
+    constructor() Ownable(msg.sender) {
         feeRecipient = msg.sender;
     }
 

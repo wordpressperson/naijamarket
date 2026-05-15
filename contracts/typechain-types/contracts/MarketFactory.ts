@@ -33,11 +33,15 @@ export interface MarketFactoryInterface extends Interface {
       | "getMarkets"
       | "markets"
       | "owner"
+      | "renounceOwnership"
       | "setFeePercentage"
       | "setFeeRecipient"
+      | "transferOwnership"
   ): FunctionFragment;
 
-  getEvent(nameOrSignatureOrTopic: "MarketCreated"): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "MarketCreated" | "OwnershipTransferred"
+  ): EventFragment;
 
   encodeFunctionData(
     functionFragment: "createMarket",
@@ -65,11 +69,19 @@ export interface MarketFactoryInterface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "setFeePercentage",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setFeeRecipient",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
     values: [AddressLike]
   ): string;
 
@@ -93,11 +105,19 @@ export interface MarketFactoryInterface extends Interface {
   decodeFunctionResult(functionFragment: "markets", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setFeePercentage",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "setFeeRecipient",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
 }
@@ -123,6 +143,19 @@ export namespace MarketCreatedEvent {
     imageUrl: string;
     category: string;
     endTime: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OwnershipTransferredEvent {
+  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
+  export type OutputTuple = [previousOwner: string, newOwner: string];
+  export interface OutputObject {
+    previousOwner: string;
+    newOwner: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -198,6 +231,8 @@ export interface MarketFactory extends BaseContract {
 
   owner: TypedContractMethod<[], [string], "view">;
 
+  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
+
   setFeePercentage: TypedContractMethod<
     [_feePercentage: BigNumberish],
     [void],
@@ -206,6 +241,12 @@ export interface MarketFactory extends BaseContract {
 
   setFeeRecipient: TypedContractMethod<
     [_feeRecipient: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  transferOwnership: TypedContractMethod<
+    [newOwner: AddressLike],
     [void],
     "nonpayable"
   >;
@@ -247,11 +288,17 @@ export interface MarketFactory extends BaseContract {
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "renounceOwnership"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "setFeePercentage"
   ): TypedContractMethod<[_feePercentage: BigNumberish], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "setFeeRecipient"
   ): TypedContractMethod<[_feeRecipient: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "transferOwnership"
+  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
 
   getEvent(
     key: "MarketCreated"
@@ -259,6 +306,13 @@ export interface MarketFactory extends BaseContract {
     MarketCreatedEvent.InputTuple,
     MarketCreatedEvent.OutputTuple,
     MarketCreatedEvent.OutputObject
+  >;
+  getEvent(
+    key: "OwnershipTransferred"
+  ): TypedContractEvent<
+    OwnershipTransferredEvent.InputTuple,
+    OwnershipTransferredEvent.OutputTuple,
+    OwnershipTransferredEvent.OutputObject
   >;
 
   filters: {
@@ -271,6 +325,17 @@ export interface MarketFactory extends BaseContract {
       MarketCreatedEvent.InputTuple,
       MarketCreatedEvent.OutputTuple,
       MarketCreatedEvent.OutputObject
+    >;
+
+    "OwnershipTransferred(address,address)": TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+    OwnershipTransferred: TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
     >;
   };
 }
