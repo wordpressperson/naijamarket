@@ -39,7 +39,7 @@ function HomeContent() {
         ) : filteredMarkets.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center text-muted-foreground border border-dashed border-border rounded-xl">
             {searchQuery ? (
-              <p>No markets found matching "{searchQuery}".</p>
+              <p>No markets found matching &quot;{searchQuery}&quot;.</p>
             ) : (
               <p>No markets available at the moment.</p>
             )}
