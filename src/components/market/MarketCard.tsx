@@ -27,6 +27,10 @@ const IMAGE_OVERRIDES: Record<string, string> = {
 export function MarketCard({ market }: { market: MarketData }) {
   const router = useRouter();
 
+  const totalOdds = market.yesOdds + market.noOdds;
+  const yesPercent = totalOdds > 0 ? Math.round((market.yesOdds / totalOdds) * 100) : 50;
+  const noPercent = totalOdds > 0 ? Math.round((market.noOdds / totalOdds) * 100) : 50;
+
   return (
     <motion.div
       onClick={() => router.push(`/market/${market.id}`)}
@@ -77,11 +81,11 @@ export function MarketCard({ market }: { market: MarketData }) {
         <div className="flex w-full space-x-2">
           <div className="flex flex-1 flex-col items-center justify-center rounded-lg bg-yes/10 border border-yes/20 py-2 text-yes hover:bg-yes/20 transition-colors">
             <span className="text-xs font-medium uppercase mb-0.5">Yes</span>
-            <span className="text-sm font-bold">₦{market.yesOdds}</span>
+            <span className="text-sm font-bold">{yesPercent}%</span>
           </div>
           <div className="flex flex-1 flex-col items-center justify-center rounded-lg bg-no/10 border border-no/20 py-2 text-no hover:bg-no/20 transition-colors">
             <span className="text-xs font-medium uppercase mb-0.5">No</span>
-            <span className="text-sm font-bold">₦{market.noOdds}</span>
+            <span className="text-sm font-bold">{noPercent}%</span>
           </div>
         </div>
       </div>

@@ -18,6 +18,10 @@ export function TradingTerminal({ yesOdds, noOdds }: TradingTerminalProps) {
   const currentPrice = outcome === "yes" ? yesOdds : noOdds;
   const potentialReturn = amount ? (parseFloat(amount) / (currentPrice / 2000)).toFixed(2) : "0.00";
 
+  const totalOdds = yesOdds + noOdds;
+  const yesPercent = totalOdds > 0 ? Math.round((yesOdds / totalOdds) * 100) : 50;
+  const noPercent = totalOdds > 0 ? Math.round((noOdds / totalOdds) * 100) : 50;
+
   return (
     <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
       <div className="flex space-x-2 rounded-lg bg-muted p-1 mb-6">
@@ -48,7 +52,7 @@ export function TradingTerminal({ yesOdds, noOdds }: TradingTerminalProps) {
             }`}
           >
             <span className="text-sm font-semibold uppercase mb-1">Yes</span>
-            <span className="text-xl font-bold">₦{yesOdds}</span>
+            <span className="text-xl font-bold">{yesPercent}%</span>
           </button>
           <button
             onClick={() => setOutcome("no")}
@@ -57,7 +61,7 @@ export function TradingTerminal({ yesOdds, noOdds }: TradingTerminalProps) {
             }`}
           >
             <span className="text-sm font-semibold uppercase mb-1">No</span>
-            <span className="text-xl font-bold">₦{noOdds}</span>
+            <span className="text-xl font-bold">{noPercent}%</span>
           </button>
         </div>
 

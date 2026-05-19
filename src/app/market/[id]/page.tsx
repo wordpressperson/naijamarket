@@ -12,7 +12,7 @@ function generateChartData(currentPrice: number): ChartDataPoint[] {
   for (let i = 30; i >= 0; i--) {
     const time = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
     // Add some random noise
-    price = Math.max(1, Math.min(1999, price + (Math.random() * 100 - 50)));
+    price = Math.max(1, Math.min(99, price + (Math.random() * 10 - 5)));
     data.push({
       time: time.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
       price: Math.round(price)
@@ -37,7 +37,10 @@ export default function MarketDetailPage({ params }: { params: { id: string } })
     endDate: "Feb 15, 2025",
   };
 
-  const chartData = generateChartData(market.yesOdds);
+  const totalOdds = market.yesOdds + market.noOdds;
+  const yesPercent = totalOdds > 0 ? Math.round((market.yesOdds / totalOdds) * 100) : 50;
+
+  const chartData = generateChartData(yesPercent);
 
   return (
     <div className="container mx-auto p-4 sm:p-6 lg:p-8">
@@ -77,7 +80,7 @@ export default function MarketDetailPage({ params }: { params: { id: string } })
           <div className="rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-sm">
             <h3 className="text-lg font-semibold mb-4 flex items-center justify-between">
               <span>Price History</span>
-              <span className="text-yes text-sm bg-yes/10 px-2 py-1 rounded-md">₦{market.yesOdds}</span>
+              <span className="text-yes text-sm bg-yes/10 px-2 py-1 rounded-md">{yesPercent}%</span>
             </h3>
             <MarketChart data={chartData} />
           </div>
