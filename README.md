@@ -93,7 +93,5 @@ The frontend is built to be highly responsive, modern, and user-friendly, cateri
 ## 5. Next Steps / Pending Work
 
 While the core infrastructure is established, the following areas represent potential next steps based on the current implementation state:
-1. **Smart Contract Deployment**: Deploy the finalized `MarketFactory` and `PredictionMarket` contracts to the Polygon Mainnet (or testnet like Amoy for final validation).
-2. **Environment Configuration**: Update the frontend `.env` files with the deployed contract addresses and active RPC endpoints.
-3. **Frontend Integration**: Finalize the connection between the `TradingTerminal` and the deployed smart contracts using `wagmi` hooks to read real-time data (`totalYesPool`, `totalNoPool`) and execute `buyShares` transactions.
-4. **Data Indexing**: Consider implementing a backend indexer (like The Graph or an off-chain API) to efficiently query historical market data and user portfolios without relying solely on RPC calls.
+1. **Frontend Integration**: Finalize the connection between the `TradingTerminal` and the deployed smart contracts using `wagmi` hooks to read real-time data (`totalYesPool`, `totalNoPool`) and execute `buyShares` transactions.
+2. **Data Indexing**: Consider implementing a backend indexer (like The Graph or an off-chain API) to efficiently query historical market data and user portfolios without relying solely on RPC calls.
