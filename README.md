@@ -1,6 +1,6 @@
 # NaijaMarket - Technical Documentation
 
-This document provides an overview of the current technical state of the NaijaMarket prediction platform, including the technology stack, project architecture, and the features implemented so far.
+This document provides an overview of the current technical state of the NaijaMarket prediction platform, including the technology stack, project architecture, setup instructions, and the features implemented so far, alongside a detailed roadmap for future improvements.
 
 ## 1. Overview & Technology Stack
 
@@ -43,7 +43,33 @@ polymarket-app/
 
 ---
 
-## 3. Smart Contracts Implementation
+## 3. System Architecture
+
+```mermaid
+graph TD
+    User([User / Wallet]) -->|Connects Wallet| Frontend
+    Frontend[Next.js Frontend] -->|Reads/Writes| Wagmi[Wagmi / Viem hooks]
+    Wagmi -->|RPC Calls| Blockchain[Blockchain Network]
+    
+    subgraph Blockchain Network
+        Factory[MarketFactory.sol]
+        PredictionMarket1[PredictionMarket.sol]
+        PredictionMarket2[PredictionMarket.sol]
+        ERC20[MockERC20.sol / USDC]
+        
+        Factory -->|Deploys| PredictionMarket1
+        Factory -->|Deploys| PredictionMarket2
+        PredictionMarket1 -->|Transfers| ERC20
+        PredictionMarket2 -->|Transfers| ERC20
+    end
+    
+    Admin([Admin]) -->|Creates Markets| Factory
+    Admin -->|Resolves Markets| PredictionMarket1
+```
+
+---
+
+## 4. Smart Contracts Implementation
 
 The core logic of the prediction market is implemented using robust, security-focused Solidity contracts.
 
@@ -66,7 +92,7 @@ A standard ERC20 token used for local testing and development to simulate stable
 
 ---
 
-## 4. Frontend Implementation
+## 5. Frontend Implementation
 
 The frontend is built to be highly responsive, modern, and user-friendly, catering to both crypto-native and non-crypto-native users.
 
@@ -77,21 +103,72 @@ The frontend is built to be highly responsive, modern, and user-friendly, cateri
 - **`/[category]`**: Dynamic routes for filtering markets by categories (e.g., Politics, Sports, Entertainment).
 
 ### Components (`src/components/`)
-- **`ui/` (Layout & Shell)**:
-  - `Navbar.tsx`: Top navigation bar containing the wallet connect button and platform branding.
-  - `Sidebar.tsx`: Side navigation for category filtering and user settings.
-- **`market/` (Core Features)**:
-  - `MarketCard.tsx`: A summary card displaying market question, image, category, and current odds.
-  - `TradingTerminal.tsx`: The interface where users input their wager amounts, select Yes/No, and interact with the smart contract to buy shares.
-  - `MarketChart.tsx`: A dynamic line/area chart (using Recharts) to visualize the odds probability or volume over time.
-  - `TrendingBanner.tsx`: A highlighted section for the most active or newly created markets.
-  - `MarketGrid.tsx`: A responsive grid layout component for organizing multiple `MarketCard` instances.
-- **`providers/`**: Context providers including RainbowKit/Wagmi configuration for wallet state management.
+- **`ui/` (Layout & Shell)**: `Navbar.tsx`, `Sidebar.tsx`.
+- **`market/` (Core Features)**: 
+  - `MarketCard.tsx`: Summary card displaying market question, image, category, and odds.
+  - `TradingTerminal.tsx`: Interface to input wager amounts, select Yes/No, and interact with contracts.
+  - `MarketChart.tsx`: Dynamic line/area chart visualizing odds/volume over time.
+  - `TrendingBanner.tsx`: Highlighted section for active markets.
+  - `MarketGrid.tsx`: Responsive grid layout for `MarketCard`.
 
 ---
 
-## 5. Next Steps / Pending Work
+## 6. Setup Instructions
 
-While the core infrastructure is established, the following areas represent potential next steps based on the current implementation state:
-1. **Frontend Integration**: Finalize the connection between the `TradingTerminal` and the deployed smart contracts using `wagmi` hooks to read real-time data (`totalYesPool`, `totalNoPool`) and execute `buyShares` transactions.
-2. **Data Indexing**: Consider implementing a backend indexer (like The Graph or an off-chain API) to efficiently query historical market data and user portfolios without relying solely on RPC calls.
+### Prerequisites
+- Node.js `^20.0.0`
+- npm or yarn or pnpm
+- MetaMask or another web3 wallet
+
+### Local Development
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+2. **Start the local Hardhat node:**
+   ```bash
+   cd contracts
+   npx hardhat node
+   ```
+3. **Deploy the contracts locally:**
+   Keep the node running, open a new terminal, and run:
+   ```bash
+   cd contracts
+   npx hardhat run scripts/deploy.ts --network localhost
+   ```
+   *(Update the deployed contract addresses in your frontend `.env.local` file).*
+4. **Run the Next.js development server:**
+   ```bash
+   cd ..
+   npm run dev
+   ```
+5. **Open** `http://localhost:3000` in your browser.
+
+---
+
+## 7. Areas of Improvement (Next Steps)
+
+While the core infrastructure is established, the platform can be further optimized and expanded. Below are the key areas for improvement:
+
+### 🚀 1. Frontend & Web3 Integration
+- **Finalize Smart Contract Hooks**: Complete the integration between the `TradingTerminal` and the deployed smart contracts using `wagmi`. Specifically, read real-time data (`totalYesPool`, `totalNoPool`) and execute `buyShares` and `claimWinnings` transactions.
+- **Optimistic UI Updates**: Implement optimistic UI rendering when a user executes a trade to improve the perceived performance of the app before the transaction is confirmed on-chain.
+- **Transaction Feedback**: Add comprehensive toast notifications (e.g., using `sonner` or `react-hot-toast`) for transaction states: Pending, Success, and Error.
+
+### 📊 2. Data Indexing & Backend
+- **Implement a Graph Node**: Relying purely on RPC calls for historical data (e.g., charts, user portfolios) is inefficient. Implement a subgraph using **The Graph** to index market creation, trades, and resolution events.
+- **Caching Layer**: Introduce a caching layer (e.g., Redis via a lightweight Next.js API route) for off-chain metadata (like market images and descriptions) to reduce load times.
+
+### 🛡️ 3. Security & Smart Contracts
+- **Oracle Integration for Resolution**: Currently, a designated `resolver` address resolves markets. Transition to a decentralized oracle system (like Chainlink or UMA) for trustless market resolution.
+- **Audit Preparedness**: Increase smart contract test coverage to near 100% and prepare the codebase for a formal security audit.
+- **Dynamic Fees**: Implement a dynamic fee structure based on trade volume or user tiers instead of a static global platform fee.
+
+### 🎨 4. UI/UX Enhancements
+- **Fiat On-Ramp**: Integrate a fiat-to-crypto on-ramp (like MoonPay or Transak) to lower the barrier to entry for users without existing crypto wallets.
+- **Social Features**: Add features such as commenting on markets, user leaderboards, and sharing markets on social media to build community engagement.
+- **Mobile Optimization**: Conduct extensive testing on mobile devices to ensure the trading terminal and charts are perfectly responsive and easy to use on smaller screens.
+
+### 📈 5. Performance Optimization
+- **Image Optimization**: Ensure all market images are routed through Next.js `next/image` for automatic compression and WebP conversion.
+- **Bundle Size Reduction**: Analyze and reduce the Next.js bundle size, potentially by lazily loading the heavy charting libraries (`recharts`) only when the market details page is rendered.
